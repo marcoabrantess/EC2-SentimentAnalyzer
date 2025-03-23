@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Docker
+*.env
+.env
+
+# Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+*.tfplan
+*.override.tf*
+terraform.tfvars*
+crash.log
