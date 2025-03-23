@@ -4,7 +4,7 @@ import json
 s3 = boto3.client("s3")
 
 INPUT_BUCKET = "raw-comments-sa1-marcoabrantes"
-OUTPUT_BUCKET = "sentiment-results-sa1-marcoabrantes"
+OUTPUT_BUCKET = "results-sentiment-sa1-marcoabrantes"
 
 def analyze_sentiment(text):
     # Simple sentiment analysis logic (replace with model if needed)
