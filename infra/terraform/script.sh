@@ -11,17 +11,13 @@ systemctl start docker
 systemctl enable docker
 echo "Docker installed"
 
-echo "Copying application files"
-mkdir -p /app
-cp -r /home/ec2-user/app/* /app/
-cd /app
+echo "Logging in to ECR"
+aws ecr get-login-password --region sa-east-1 | docker login --username AWS 383498687630.dkr.ecr.sa-east-1.amazonaws.com
+echo "Logged in to ECR"
 
-echo "Building Docker image"
-docker build -t sentiment-analyzer .
+echo "Pulling latest image from ECR"
+docker pull 383498687630.dkr.ecr.sa-east-1.amazonaws.com/sentiment-analyzer:latest
 
 echo "Running container"
-docker run -d --name sentiment-analyzer sentiment-analyzer
+docker run -d --name sentiment-analyzer 383498687630.dkr.ecr.sa-east-1.amazonaws.com/sentiment-analyzer:latest
 echo "Container is running"
-
-echo "Uploading file to S3"
-aws s3 cp /app/comentarios.txt s3://raw-comments-ec2-sentiment-analyzer-sa-east-1-marcoabrantes/
