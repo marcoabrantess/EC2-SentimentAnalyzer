@@ -8,11 +8,16 @@ on:
             - main
 
 jobs:
-    build-and-deploy:
+    build-and-push:
+        name: Build and Push Docker Image to ECR
         runs-on: ubuntu-latest
 
+        env:
+            AWS_REGION: sa-east-1
+            ECR_REPOSITORY: sentiment-analyzer
+
         steps:
-            - name: Checkout
+            - name: Checkout source code
               uses: actions/checkout@v3
 
             - name: Configure AWS credentials
@@ -20,15 +25,21 @@ jobs:
               with:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-region: sa-east-1
+                  aws-region: ${{ env.AWS_REGION }}
 
-            - name: Login to ECR
+            - name: Login to Amazon ECR
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
 
-            - name: Build and push Docker image
+            - name: Set image URI
+              id: vars
+              run: echo "IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest" >> $GITHUB_ENV
+
+            - name: Build Docker image
               run: |
                   cd app
-                  IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/sentiment-analyzer:latest
                   docker build -t $IMAGE_URI .
+
+            - name: Push Docker image to ECR
+              run: |
                   docker push $IMAGE_URI
