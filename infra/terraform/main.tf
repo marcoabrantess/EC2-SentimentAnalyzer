@@ -114,18 +114,18 @@ resource "aws_iam_policy" "s3_access_policy" {
         ]
         Resource = [
           "arn:aws:s3:::raw-comments-sa1-marcoabrantes/*",
-          "arn:aws:s3:::sentiment-results-sa1-marcoabrantes/*"
+          "arn:aws:s3:::results-sentiment-sa1-marcoabrantes/*"
         ]
       },
       {
         Sid    = "AllowBucketListing"
         Effect = "Allow"
         Action = [
-          "s3:ListBucket"
+          "s3:ListBucket",
         ]
         Resource = [
           "arn:aws:s3:::raw-comments-sa1-marcoabrantes",
-          "arn:aws:s3:::sentiment-results-sa1-marcoabrantes"
+          "arn:aws:s3:::results-sentiment-sa1-marcoabrantes"
         ]
       }
     ]
