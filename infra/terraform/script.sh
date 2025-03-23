@@ -11,6 +11,10 @@ systemctl start docker
 systemctl enable docker
 echo "Docker installed"
 
+echo "Uploading comentarios.txt to S3"
+aws s3 cp /app/comentarios.txt s3://raw-comments-sa1-marcoabrantes/comentarios.txt
+echo "Upload completed"
+
 echo "Logging in to ECR"
 aws ecr get-login-password --region sa-east-1 | sudo docker login --username AWS --password-stdin 383498687630.dkr.ecr.sa-east-1.amazonaws.com
 echo "Logged in to ECR"
