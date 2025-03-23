@@ -153,3 +153,7 @@ resource "aws_instance" "sentiment_analyzer" {
     Name = "EC2 for Sentiment Analyzer"
   }
 }
+
+resource "aws_ecr_repository" "sentiment_analyzer" {
+  name = "sentiment-analyzer"
+}
