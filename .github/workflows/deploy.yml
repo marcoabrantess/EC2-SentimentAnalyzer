@@ -43,3 +43,16 @@ jobs:
             - name: Push Docker image to ECR
               run: |
                   docker push $IMAGE_URI
+
+            - name: Trigger EC2 update via SSM
+              run: |
+                  aws ssm send-command \
+                    --document-name "AWS-RunShellScript" \
+                    --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
+                    --region sa-east-1 \
+                    --parameters 'commands=[
+                      "aws ecr get-login-password --region sa-east-1 | sudo docker login --username AWS --password-stdin 383498687630.dkr.ecr.sa-east-1.amazonaws.com",
+                      "sudo docker pull 383498687630.dkr.ecr.sa-east-1.amazonaws.com/sentiment-analyzer:latest",
+                      "sudo docker rm -f sentiment-analyzer || true",
+                      "sudo docker run -d --name sentiment-analyzer 383498687630.dkr.ecr.sa-east-1.amazonaws.com/sentiment-analyzer:latest"
+                    ]'
