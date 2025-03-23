@@ -100,34 +100,38 @@ resource "aws_iam_role" "ec2_s3_access" {
 
 resource "aws_iam_policy" "s3_access_policy" {
   name        = "EC2S3AccessPolicy"
-  description = "Allow EC2 to access S3 buckets for raw data and sentiment results"
+  description = "Allow EC2 to access S3 buckets for sentiment analyzer"
 
   policy = jsonencode({
-  Version = "2012-10-17",
-  Statement = [
-    {
-      Effect = "Allow",
-      Action = [
-        "s3:GetObject",
-        "s3:PutObject"
-      ],
-      Resource = [
-        "arn:aws:s3:::raw-comments-sa1-marcoabrantes/*",
-        "arn:aws:s3:::sentiment-results-sa1-marcoabrantes/*"
-      ]
-    },
-    {
-      Effect = "Allow",
-      Action = [
-        "s3:ListBucket"
-      ],
-      Resource = [
-        "arn:aws:s3:::raw-comments-sa1-marcoabrantes"
-      ]
-    }
-  ]
-})
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid    = "AllowObjectLevelAccess"
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject"
+        ]
+        Resource = [
+          "arn:aws:s3:::raw-comments-sa1-marcoabrantes/*",
+          "arn:aws:s3:::sentiment-results-sa1-marcoabrantes/*"
+        ]
+      },
+      {
+        Sid    = "AllowBucketListing"
+        Effect = "Allow"
+        Action = [
+          "s3:ListBucket"
+        ]
+        Resource = [
+          "arn:aws:s3:::raw-comments-sa1-marcoabrantes",
+          "arn:aws:s3:::sentiment-results-sa1-marcoabrantes"
+        ]
+      }
+    ]
+  })
 }
+
 
 resource "aws_iam_role_policy_attachment" "ec2_s3_access_attach" {
   role       = aws_iam_role.ec2_s3_access.name
