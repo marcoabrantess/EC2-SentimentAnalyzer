@@ -1,7 +1,7 @@
 import os
 import boto3
 
-os.environ.get()
+os.environ.get('HOME', '/home/marco/')
 
 client = boto3.client("s3")
 response = client.list_objects_v2(
